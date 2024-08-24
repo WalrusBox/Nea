@@ -1,23 +1,23 @@
 import random as rdom
 
 
-class matrix:  # Creating and returning a matrix
+class Matrix:
 
     def __init__(self):
         self.matrix = []
 
-    def create(self, random: bool = False, row: int = None, column: int = None) -> list:  # return the matrix
+    def create(self, random: bool = False, column: int = None, row: int = None) -> list:  # makes the matrix
         if random is True:
-            return self.random_matrix(row, column)
+            return self.random_matrix(column, row)
         else:
-            return self.manuel_matrix(row, column)
+            return self.manuel_matrix(column, row)
 
     def random_matrix(self, r: int, c: int) -> list:  # random matrix creater 2000
         self.matrix = []
-        if r is None:  # if row isn't define
-            r = rdom.randint(1, 3)  # how many rows it will have
+        if r is None:  # if row or collumn isn't define
+            r = rdom.randint(1, 3)
         if c is None:
-            c = rdom.randint(1, 3)  # how many columns it will have
+            c = rdom.randint(1, 3)
 
         for row in range(r):  # Row
             column = []
@@ -28,13 +28,79 @@ class matrix:  # Creating and returning a matrix
 
     def manuel_matrix(self, r: int, c: int) -> list:
         self.matrix = []
-        for rows in range(1, r+1):
+        for rows in range(1, r + 1):
             column = []
-            for columns in range(1, c+1):
+            for columns in range(1, c + 1):
                 num = int(input(f'Enter a number for row: {rows}, column: {columns}\n'))
                 column.append(num)
             self.matrix.append(column)
         return self.matrix
 
+    def add(self, matrix_2: list = None) -> list:
+        result = []
+        if matrix_2 is not None:
+            pass
+        else:
+            print('''* Remember for adding the row and coloumn have to be the same\n''')
+            random = input('Do you want the matrix to be random (y/n)\n')
+            if random.lower() == 'y':
+                matrix_2 = Matrix().create(random=True, column=len(self.matrix), row=len(self.matrix[0]))
+            else:
+                matrix_2 = Matrix().create(random=False, column=len(self.matrix), row=len(self.matrix[0]))
 
-class ajnop''
+        print(self.matrix, matrix_2)
+
+        for column in range(len(self.matrix)):
+            temp = []
+            for row in range(len(self.matrix[column])):
+                temp.append(self.matrix[column][row] + matrix_2[column][row])
+            result.append(temp)
+        return result
+
+    def sub(self, matrix_2: list = None) -> list:
+        result = []
+        if matrix_2 is not None:
+            pass
+        else:
+            print('''* Remember for subtracing the row and coloumn have to be the same\n''')
+            random = input('Do you want the matrix to be random (y/n)\n')
+            if random.lower() == 'y':
+                matrix_2 = Matrix().create(random=True, column=len(self.matrix), row=len(self.matrix[0]))
+            else:
+                matrix_2 = Matrix().create(random=False, column=len(self.matrix), row=len(self.matrix[0]))
+
+        print(self.matrix, matrix_2)
+
+        for column in range(len(self.matrix)):
+            temp = []
+            for row in range(len(self.matrix[column])):
+                temp.append(self.matrix[column][row] - matrix_2[column][row])
+            result.append(temp)
+        return result
+
+    def multiplication(self, matrix_2: list = None) -> list:
+        result = []
+
+        if matrix_2 is None:
+            random = input('Do you want the matrix to be random (y/n)\n')
+            if random.lower() == 'y':
+                matrix_2 = Matrix().create(random=True, column=int(input('How many columns\n')),
+                                           row=int(input('How many '
+                                                         'rows\n')))
+            else:
+                matrix_2 = Matrix().create(random=False, column=int(input('How many columns\n')),
+                                           row=int(input('How many '
+                                                         'rows\n')))
+
+        if len(self.matrix[0]) == len(matrix_2):  # checking if the two matrixes are able to be multipled
+            for r_row in range(len(self.matrix)):  # resulten matrix column
+                temp = []
+                for r_column in range(len(matrix_2[0])):
+                    add_multi = sum(self.matrix[r_row][k] * matrix_2[k][r_column] for k in range(len(matrix_2)))
+                    temp.append(add_multi)
+                result.append(temp)
+            return result
+
+        else:
+            print('Matrix one must have the same number of columns as Matrix two has rows!')
+            return []
