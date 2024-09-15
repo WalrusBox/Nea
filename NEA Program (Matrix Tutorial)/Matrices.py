@@ -3,8 +3,11 @@ import random as rdom
 
 class Matrix:
 
-    def __init__(self):
-        self.matrix = []
+    def __init__(self, matrix=None):
+        if matrix is None:
+            self.matrix = []
+        else:
+            self.matrix = matrix
 
     def create(self, random: bool = False, column: int = None, row: int = None) -> list:  # makes the matrix
         if random is True:
@@ -38,17 +41,15 @@ class Matrix:
 
     def add(self, matrix_2: list = None) -> list:
         result = []
-        if matrix_2 is not None:
-            pass
-        else:
+        random = ""
+        if matrix_2 is None:
             print('''* Remember for adding the row and coloumn have to be the same\n''')
-            random = input('Do you want the matrix to be random (y/n)\n')
-            if random.lower() == 'y':
-                matrix_2 = Matrix().create(random=True, column=len(self.matrix), row=len(self.matrix[0]))
-            else:
-                matrix_2 = Matrix().create(random=False, column=len(self.matrix), row=len(self.matrix[0]))
-
-        print(self.matrix, matrix_2)
+            while random.lower() != "y" or random.lower() != "n":
+                random = input('Do you want the matrix to be random (y/n)\n')
+                if random.lower() == 'y':
+                    matrix_2 = Matrix().create(random=True, column=len(self.matrix), row=len(self.matrix[0]))
+                else:
+                    matrix_2 = Matrix().create(random=False, column=len(self.matrix), row=len(self.matrix[0]))
 
         for column in range(len(self.matrix)):
             temp = []
@@ -59,17 +60,15 @@ class Matrix:
 
     def sub(self, matrix_2: list = None) -> list:
         result = []
-        if matrix_2 is not None:
-            pass
-        else:
+        random = ""
+        if matrix_2 is None:
             print('''* Remember for subtracing the row and coloumn have to be the same\n''')
-            random = input('Do you want the matrix to be random (y/n)\n')
-            if random.lower() == 'y':
-                matrix_2 = Matrix().create(random=True, column=len(self.matrix), row=len(self.matrix[0]))
-            else:
-                matrix_2 = Matrix().create(random=False, column=len(self.matrix), row=len(self.matrix[0]))
-
-        print(self.matrix, matrix_2)
+            while random.lower() != "y" or random.lower() != "n":
+                random = input('Do you want the matrix to be random (y/n)\n')
+                if random.lower() == 'y':
+                    matrix_2 = Matrix().create(random=True, column=len(self.matrix), row=len(self.matrix[0]))
+                else:
+                    matrix_2 = Matrix().create(random=False, column=len(self.matrix), row=len(self.matrix[0]))
 
         for column in range(len(self.matrix)):
             temp = []
@@ -80,17 +79,19 @@ class Matrix:
 
     def multiplication(self, matrix_2: list = None) -> list:
         result = []
+        random = ""
 
         if matrix_2 is None:
-            random = input('Do you want the matrix to be random (y/n)\n')
-            if random.lower() == 'y':
-                matrix_2 = Matrix().create(random=True, column=int(input('How many columns\n')),
-                                           row=int(input('How many '
-                                                         'rows\n')))
-            else:
-                matrix_2 = Matrix().create(random=False, column=int(input('How many columns\n')),
-                                           row=int(input('How many '
-                                                         'rows\n')))
+            while random.lower() != "y" or random.lower() != "n":
+                random = input('Do you want the matrix to be random (y/n)\n')
+                if random.lower() == 'y':
+                    matrix_2 = Matrix().create(random=True, column=int(input('How many columns\n')),
+                                               row=int(input('How many '
+                                                             'rows\n')))
+                else:
+                    matrix_2 = Matrix().create(random=False, column=int(input('How many columns\n')),
+                                               row=int(input('How many '
+                                                             'rows\n')))
 
         if len(self.matrix[0]) == len(matrix_2):  # checking if the two matrixes are able to be multipled
             for r_row in range(len(self.matrix)):  # resulten matrix column
@@ -104,3 +105,21 @@ class Matrix:
         else:
             print('Matrix one must have the same number of columns as Matrix two has rows!')
             return []
+
+    def get_sub_matrix(self, x: int, y: int) -> list:
+        return [row[:y] + row[y + 1:] for row in (self.matrix[:x] + self.matrix[x + 1:])]
+
+    def determinant(self):
+        if len(self.matrix) == 2:  # checking if the matrix is 2x2 or 3x3
+            return (self.matrix[0][1] * self.matrix[1][0]) - (self.matrix[0][0] * self.matrix[1][1])
+
+        elif len(self.matrix) == 3:
+            det = sum(((-1) ** a) * self.matrix[0][a] * (Matrix(matrix=self.get_sub_matrix(x=0, y=a)).determinant())
+                      for a in range(len(self.matrix)))
+            return det
+        else:
+            return "Matrix has to be a 3x3 or a 2x2"
+
+
+matrix = Matrix(matrix=[[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+print(matrix.determinant())
