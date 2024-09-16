@@ -111,7 +111,7 @@ class Matrix:
 
     def determinant(self):
         if len(self.matrix) == 2:  # checking if the matrix is 2x2 or 3x3
-            return (self.matrix[0][1] * self.matrix[1][0]) - (self.matrix[0][0] * self.matrix[1][1])
+            return (self.matrix[0][0] * self.matrix[1][1]) - (self.matrix[0][1] * self.matrix[1][0])
 
         elif len(self.matrix) == 3:
             det = sum(((-1) ** a) * self.matrix[0][a] * (Matrix(matrix=self.get_sub_matrix(x=0, y=a)).determinant())
