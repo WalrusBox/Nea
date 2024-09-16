@@ -114,8 +114,8 @@ class Matrix:
             return (self.matrix[0][0] * self.matrix[1][1]) - (self.matrix[0][1] * self.matrix[1][0])
 
         elif len(self.matrix) == 3:
-            det = sum(((-1) ** a) * self.matrix[0][a] * (Matrix(matrix=self.get_sub_matrix(x=0, y=a)).determinant())
-                      for a in range(len(self.matrix)))
+            det = sum(((-1) ** row) * self.matrix[0][row] * (Matrix(matrix=self.get_sub_matrix(x=0, y=row)).determinant())
+                      for row in range(len(self.matrix)))
             return det
         else:
             return "Matrix has to be a 3x3 or a 2x2"
