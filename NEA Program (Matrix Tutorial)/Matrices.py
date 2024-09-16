@@ -29,7 +29,7 @@ class Matrix:
             self.matrix.append(column)
         return self.matrix
 
-    def manuel_matrix(self, r: int, c: int) -> list:
+    def manual_matrix(self, r: int, c: int) -> list:
         self.matrix = []
         for rows in range(1, r + 1):
             column = []
