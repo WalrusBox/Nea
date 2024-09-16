@@ -9,22 +9,22 @@ class Matrix:
         else:
             self.matrix = matrix
 
-    def create(self, random: bool = False, column: int = None, row: int = None) -> list:  # makes the matrix
+    def create(self, random: bool = False, column: int = None, row: int = None) -> list:
         if random is True:
             return self.random_matrix(column, row)
         else:
-            return self.manuel_matrix(column, row)
+            return self.manual_matrix(column, row)
 
-    def random_matrix(self, r: int, c: int) -> list:  # random matrix creater 2000
+    def random_matrix(self, r: int, c: int) -> list:
         self.matrix = []
-        if r is None:  # if row or collumn isn't define
+        if r is None:
             r = rdom.randint(1, 3)
         if c is None:
             c = rdom.randint(1, 3)
 
-        for row in range(r):  # Row
+        for row in range(r):
             column = []
-            for col in range(c):  # column
+            for col in range(c):
                 column.append(rdom.randint(0, 9))
             self.matrix.append(column)
         return self.matrix
@@ -93,8 +93,8 @@ class Matrix:
                                                row=int(input('How many '
                                                              'rows\n')))
 
-        if len(self.matrix[0]) == len(matrix_2):  # checking if the two matrixes are able to be multipled
-            for r_row in range(len(self.matrix)):  # resulten matrix column
+        if len(self.matrix[0]) == len(matrix_2):
+            for r_row in range(len(self.matrix)):
                 temp = []
                 for r_column in range(len(matrix_2[0])):
                     add_multi = sum(self.matrix[r_row][k] * matrix_2[k][r_column] for k in range(len(matrix_2)))
@@ -110,16 +110,14 @@ class Matrix:
         return [row[:y] + row[y + 1:] for row in (self.matrix[:x] + self.matrix[x + 1:])]
 
     def determinant(self):
-        if len(self.matrix) == 2:  # checking if the matrix is 2x2 or 3x3
+        if len(self.matrix) == 2:
             return (self.matrix[0][0] * self.matrix[1][1]) - (self.matrix[0][1] * self.matrix[1][0])
 
         elif len(self.matrix) == 3:
-            det = sum(((-1) ** row) * self.matrix[0][row] * (Matrix(matrix=self.get_sub_matrix(x=0, y=row)).determinant())
-                      for row in range(len(self.matrix)))
+            det = 0
+            for row in range(len(self.matrix)):
+                sub_matrix = Matrix(matrix=self.get_sub_matrix(x=0, y=row)).determinant()
+                det += ((-1) ** row) * self.matrix[0][row] * sub_matrix
             return det
         else:
             return "Matrix has to be a 3x3 or a 2x2"
-
-
-matrix = Matrix(matrix=[[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-print(matrix.determinant())
