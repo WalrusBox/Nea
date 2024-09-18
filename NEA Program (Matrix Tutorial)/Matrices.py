@@ -110,14 +110,32 @@ class Matrix:
         return [row[:y] + row[y + 1:] for row in (self.matrix[:x] + self.matrix[x + 1:])]
 
     def determinant(self):
-        if len(self.matrix) == 2:
+        if len(self.matrix) != len(self.matrix[0]):
+            raise ValueError("The Matrix needs to be a square")
+
+        elif len(self.matrix) == 1:
+            return self.matrix[0][0]
+
+        elif len(self.matrix) == 2:
             return (self.matrix[0][0] * self.matrix[1][1]) - (self.matrix[0][1] * self.matrix[1][0])
 
-        elif len(self.matrix) == 3:
+        else:
             det = 0
             for row in range(len(self.matrix)):
                 sub_matrix = Matrix(matrix=self.get_sub_matrix(x=0, y=row)).determinant()
                 det += ((-1) ** row) * self.matrix[0][row] * sub_matrix
             return det
+
+    def minor(self):
+
+        if len(self.matrix) != len(self.matrix[0]):
+            raise ValueError("The Matrix needs to be a square")
+
         else:
-            return "Matrix has to be a 3x3 or a 2x2"
+            minor = []
+            for r in range(len(self.matrix)):
+                temp = []
+                for c in range(len(self.matrix)):
+                    temp += [Matrix(self.get_sub_matrix(x=r, y=c)).determinant()]
+                minor.append(temp)
+            return minor
