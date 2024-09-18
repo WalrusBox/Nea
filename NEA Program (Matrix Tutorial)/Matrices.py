@@ -34,7 +34,7 @@ class Matrix:
         for rows in range(1, r + 1):
             column = []
             for columns in range(1, c + 1):
-                num = int(input(f'Enter a number for row: {rows}, column: {columns}\n'))
+                num = int(input(f"Enter a number for row: {rows}, column: {columns}\n"))
                 column.append(num)
             self.matrix.append(column)
         return self.matrix
@@ -43,10 +43,10 @@ class Matrix:
         result = []
         random = ""
         if matrix_2 is None:
-            print('''* Remember for adding the row and coloumn have to be the same\n''')
+            print("""* Remember for adding the row and coloumn have to be the same\n""")
             while random.lower() != "y" or random.lower() != "n":
-                random = input('Do you want the matrix to be random (y/n)\n')
-                if random.lower() == 'y':
+                random = input("Do you want the matrix to be random (y/n)\n")
+                if random.lower() == "y":
                     matrix_2 = Matrix().create(random=True, column=len(self.matrix), row=len(self.matrix[0]))
                 else:
                     matrix_2 = Matrix().create(random=False, column=len(self.matrix), row=len(self.matrix[0]))
@@ -62,10 +62,10 @@ class Matrix:
         result = []
         random = ""
         if matrix_2 is None:
-            print('''* Remember for subtracing the row and coloumn have to be the same\n''')
+            print("""* Remember for subtracing the row and coloumn have to be the same\n""")
             while random.lower() != "y" or random.lower() != "n":
-                random = input('Do you want the matrix to be random (y/n)\n')
-                if random.lower() == 'y':
+                random = input("Do you want the matrix to be random (y/n)\n")
+                if random.lower() == "y":
                     matrix_2 = Matrix().create(random=True, column=len(self.matrix), row=len(self.matrix[0]))
                 else:
                     matrix_2 = Matrix().create(random=False, column=len(self.matrix), row=len(self.matrix[0]))
@@ -77,21 +77,29 @@ class Matrix:
             result.append(temp)
         return result
 
-    def multiplication(self, matrix_2: list = None) -> list:
+    def multiplication(self, matrix_2=None) -> list:
         result = []
         random = ""
 
         if matrix_2 is None:
             while random.lower() != "y" or random.lower() != "n":
-                random = input('Do you want the matrix to be random (y/n)\n')
-                if random.lower() == 'y':
-                    matrix_2 = Matrix().create(random=True, column=int(input('How many columns\n')),
-                                               row=int(input('How many '
-                                                             'rows\n')))
+                random = input("Do you want the matrix to be random (y/n)\n")
+                if random.lower() == "y":
+                    matrix_2 = Matrix().create(random=True, column=int(input("How many columns\n")),
+                                               row=int(input("How many "
+                                                             "rows\n")))
                 else:
-                    matrix_2 = Matrix().create(random=False, column=int(input('How many columns\n')),
-                                               row=int(input('How many '
-                                                             'rows\n')))
+                    matrix_2 = Matrix().create(random=False, column=int(input("How many columns\n")),
+                                               row=int(input("How many "
+                                                             "rows\n")))
+
+        if type(matrix_2) is int or type(matrix_2) is float:
+            for col in range(len(self.matrix)):
+                temp = []
+                for row in range(len(self.matrix)):
+                    temp += [matrix_2 * self.matrix[col][row]]
+                result.append(temp)
+            return result
 
         if len(self.matrix[0]) == len(matrix_2):
             for r_row in range(len(self.matrix)):
@@ -102,9 +110,9 @@ class Matrix:
                 result.append(temp)
             return result
 
+
         else:
-            print('Matrix one must have the same number of columns as Matrix two has rows!')
-            return []
+            raise ValueError("Matrix one must have the same number of columns as Matrix two has rows!")
 
     def get_sub_matrix(self, x: int, y: int) -> list:
         return [row[:y] + row[y + 1:] for row in (self.matrix[:x] + self.matrix[x + 1:])]
@@ -113,7 +121,7 @@ class Matrix:
         if len(self.matrix) != len(self.matrix[0]):
             raise ValueError("The Matrix needs to be a square")
 
-        elif len(self.matrix) == 1:
+        elif len(self.matrix) == 1 and len(self.matrix[0]) == 1:
             return self.matrix[0][0]
 
         elif len(self.matrix) == 2:
@@ -139,3 +147,61 @@ class Matrix:
                     temp += [Matrix(self.get_sub_matrix(x=r, y=c)).determinant()]
                 minor.append(temp)
             return minor
+
+    def transpose(self):
+
+        if len(self.matrix) != len(self.matrix[0]):
+            raise ValueError("The matrix needs to be a square")
+
+        ct = []
+        for col in range(len(self.matrix)):
+            temp = []
+            for row in range(len(self.matrix)):
+                temp += [self.matrix[row][col]]
+            ct.append(temp)
+        return ct
+
+    def cofactors(self):
+
+        if len(self.matrix) != len(self.matrix[0]):
+            raise ValueError("Matrix needs to be a sqaure")
+
+        else:
+            result = []
+
+            for row in range(len(self.matrix)):
+                temp = []
+                for col in range(len(self.matrix)):
+                    temp += [((-1) ** (row + col)) * self.matrix[row][col]]
+                result.append(temp)
+
+            return result
+
+    def inverse(self):
+        if len(self.matrix) != len(self.matrix[0]):
+            raise ValueError("Matrix has to be a square")
+
+        if Matrix.determinant(self) == 0:
+            raise ZeroDivisionError("The Matrix needs to be a non singular")
+
+        if len(self.matrix) == 2:
+
+            det = Matrix.determinant(self)
+            self.matrix = Matrix.cofactors(self)
+            self.matrix[0][0], self.matrix[1][1] = self.matrix[1][1], self.matrix[0][0]
+            return self.multiplication(matrix_2=1 / det)
+
+        else:
+            det = Matrix.determinant(self)
+            self.matrix = Matrix.minor(self)
+            self.matrix = Matrix.cofactors(self)
+            self.matrix = Matrix.transpose(self)
+            return self.multiplication(matrix_2=1 / det)
+
+
+m = Matrix(matrix=[[2, 3, 2], [3, -2, 1], [2, 1, 1]])
+
+m = m.inverse()
+
+for x in m:
+    print(m)
