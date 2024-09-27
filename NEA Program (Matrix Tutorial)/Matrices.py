@@ -9,6 +9,10 @@ class Matrix:
         else:
             self.matrix = matrix
 
+    def get_matrix(self):
+        return self.matrix
+
+
     def create(self, random: bool = False, column: int = None, row: int = None) -> list:
         if random is True:
             return self.random_matrix(column, row)
@@ -39,7 +43,7 @@ class Matrix:
             self.matrix.append(column)
         return self.matrix
 
-    def add(self, matrix_2: list = None) -> list:
+    def add(self, matrix_2=None):
         result = []
         random = ""
         if matrix_2 is None:
@@ -56,9 +60,9 @@ class Matrix:
             for row in range(len(self.matrix[column])):
                 temp.append(self.matrix[column][row] + matrix_2[column][row])
             result.append(temp)
-        return result
+        return Matrix(result)
 
-    def sub(self, matrix_2: list = None) -> list:
+    def sub(self, matrix_2=None):
         result = []
         random = ""
         if matrix_2 is None:
@@ -75,9 +79,9 @@ class Matrix:
             for row in range(len(self.matrix[column])):
                 temp.append(self.matrix[column][row] - matrix_2[column][row])
             result.append(temp)
-        return result
+        return Matrix(result)
 
-    def multiplication(self, matrix_2=None) -> list:
+    def multiplication(self, matrix_2=None):
         result = []
         random = ""
 
@@ -99,7 +103,7 @@ class Matrix:
                 for row in range(len(self.matrix)):
                     temp += [matrix_2 * self.matrix[col][row]]
                 result.append(temp)
-            return result
+            return Matrix(result)
 
         if len(self.matrix[0]) == len(matrix_2):
             for r_row in range(len(self.matrix)):
@@ -108,7 +112,7 @@ class Matrix:
                     add_multi = sum(self.matrix[r_row][k] * matrix_2[k][r_column] for k in range(len(matrix_2)))
                     temp.append(add_multi)
                 result.append(temp)
-            return result
+            return Matrix(result)
 
 
         else:
@@ -162,6 +166,7 @@ class Matrix:
         return ct
 
     def cofactors(self):
+        print(self.matrix)
 
         if len(self.matrix) != len(self.matrix[0]):
             raise ValueError("Matrix needs to be a sqaure")
@@ -197,11 +202,3 @@ class Matrix:
             self.matrix = Matrix.cofactors(self)
             self.matrix = Matrix.transpose(self)
             return self.multiplication(matrix_2=1 / det)
-
-
-m = Matrix(matrix=[[2, 3, 2], [3, -2, 1], [2, 1, 1]])
-
-m = m.inverse()
-
-for x in m:
-    print(m)
