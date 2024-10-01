@@ -3,15 +3,15 @@ import random as rdom
 
 class Matrix:
 
-    def __init__(self, matrix=None):
+    def __init__(self, matrix=None, scalar = 1):
         if matrix is None:
             self.matrix = []
         else:
             self.matrix = matrix
+        self.scalar = scalar
 
     def get_matrix(self):
-        return self.matrix
-
+        return str(self.scalar) + ' * ' + str(self.matrix)
 
     def create(self, random: bool = False, column: int = None, row: int = None) -> list:
         if random is True:
@@ -201,4 +201,22 @@ class Matrix:
             self.matrix = Matrix.minor(self)
             self.matrix = Matrix.cofactors(self)
             self.matrix = Matrix.transpose(self)
-            return self.multiplication(matrix_2=1 / det)
+            self.scalar = Fraction(1, det)
+            return self
+
+
+class Fraction:
+    def __init__(self, numo, demo):
+        self.numo = numo
+        self.demo = demo
+
+    def __str__(self):
+        return f"{self.numo}/{self.demo}"
+
+
+
+
+m = Matrix(matrix=[[3,2,-1,1],[1,0,1,2],[2,1,1,-1],[1,1,1,0]])
+
+
+print(m.inverse().get_matrix())
